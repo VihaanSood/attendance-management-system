@@ -4,7 +4,7 @@
   "description": "Full-stack Attendance & Employee Management System with JWT Auth, multi-tenancy, and salary calculation",
   "main": "src/server.js",
   "scripts": {
-    "start": "node src/server.js",
+    "start": "node scripts/migrate-and-start.js",
     "dev": "nodemon src/server.js",
     "db:migrate": "npx prisma migrate dev",
     "db:generate": "npx prisma generate",
