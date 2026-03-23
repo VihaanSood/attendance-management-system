@@ -9,4 +9,4 @@ console.log('Generating Prisma client...')
 execSync('node node_modules/prisma/build/index.js generate', { stdio: 'inherit' })
 
 console.log('Starting server...')
-require('./src/server.js')
+require('../src/server.js')
