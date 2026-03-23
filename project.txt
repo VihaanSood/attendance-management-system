@@ -1,0 +1,1 @@
+to run or see the database - npx prisma studio       or      open pgadmin 4 in postgres folder in the pc 

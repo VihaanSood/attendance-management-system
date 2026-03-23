@@ -1,0 +1,334 @@
+{
+  "info": {
+    "name": "Attendance Management System API",
+    "_postman_id": "attendance-system-v1",
+    "description": "Complete API collection for the Attendance & Employee Management System.\n\n**Setup:**\n1. Import this collection\n2. Set the `baseUrl` variable to `http://localhost:5000/api/v1`\n3. Run **Register** or **Login** — the token is auto-saved\n4. All protected requests automatically use the saved token",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    { "key": "baseUrl",     "value": "http://localhost:5000/api/v1" },
+    { "key": "token",       "value": "" },
+    { "key": "employeeId",  "value": "" },
+    { "key": "leaveId",     "value": "" },
+    { "key": "holidayId",   "value": "" }
+  ],
+  "auth": {
+    "type": "bearer",
+    "bearer": [{ "key": "token", "value": "{{token}}", "type": "string" }]
+  },
+  "item": [
+    {
+      "name": "🔐 Auth",
+      "item": [
+        {
+          "name": "Register",
+          "event": [{ "listen": "test", "script": { "exec": [
+            "if (pm.response.code === 201) {",
+            "  const d = pm.response.json().data;",
+            "  pm.collectionVariables.set('token', d.accessToken);",
+            "  console.log('Token saved');",
+            "}"
+          ], "type": "text/javascript" } }],
+          "request": {
+            "method": "POST", "auth": { "type": "noauth" },
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"name\": \"Jane Doe\",\n  \"email\": \"jane@corp.com\",\n  \"password\": \"Secret@123\",\n  \"organization\": \"Acme Corp\"\n}" },
+            "url": { "raw": "{{baseUrl}}/auth/register", "host": ["{{baseUrl}}"], "path": ["auth", "register"] }
+          }
+        },
+        {
+          "name": "Login",
+          "event": [{ "listen": "test", "script": { "exec": [
+            "if (pm.response.code === 200) {",
+            "  const d = pm.response.json().data;",
+            "  pm.collectionVariables.set('token', d.accessToken);",
+            "  console.log('Token saved');",
+            "}"
+          ], "type": "text/javascript" } }],
+          "request": {
+            "method": "POST", "auth": { "type": "noauth" },
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"email\": \"jane@corp.com\",\n  \"password\": \"Secret@123\"\n}" },
+            "url": { "raw": "{{baseUrl}}/auth/login", "host": ["{{baseUrl}}"], "path": ["auth", "login"] }
+          }
+        },
+        {
+          "name": "Get Profile",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/auth/me", "host": ["{{baseUrl}}"], "path": ["auth", "me"] }
+          }
+        },
+        {
+          "name": "Change Password",
+          "request": {
+            "method": "PATCH",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"currentPassword\": \"Secret@123\",\n  \"newPassword\": \"NewSecret@456\"\n}" },
+            "url": { "raw": "{{baseUrl}}/auth/change-password", "host": ["{{baseUrl}}"], "path": ["auth", "change-password"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "👥 Employees",
+      "item": [
+        {
+          "name": "Create Employee",
+          "event": [{ "listen": "test", "script": { "exec": [
+            "if (pm.response.code === 201) {",
+            "  const d = pm.response.json().data;",
+            "  pm.collectionVariables.set('employeeId', d.id);",
+            "  console.log('Employee ID saved:', d.id);",
+            "}"
+          ], "type": "text/javascript" } }],
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"name\": \"Alice Johnson\",\n  \"age\": 28,\n  \"salary\": 5000,\n  \"role\": \"Software Engineer\",\n  \"department\": \"Engineering\",\n  \"joiningDate\": \"2024-01-15\",\n  \"email\": \"alice@corp.com\",\n  \"phone\": \"+1-555-0101\"\n}" },
+            "url": { "raw": "{{baseUrl}}/employees", "host": ["{{baseUrl}}"], "path": ["employees"] }
+          }
+        },
+        {
+          "name": "List Employees",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/employees?page=1&limit=10", "host": ["{{baseUrl}}"], "path": ["employees"], "query": [
+              { "key": "page", "value": "1" }, { "key": "limit", "value": "10" },
+              { "key": "search", "value": "", "disabled": true },
+              { "key": "department", "value": "", "disabled": true }
+            ]}
+          }
+        },
+        {
+          "name": "Get Employee",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/employees/{{employeeId}}", "host": ["{{baseUrl}}"], "path": ["employees", "{{employeeId}}"] }
+          }
+        },
+        {
+          "name": "Update Employee",
+          "request": {
+            "method": "PATCH",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"salary\": 5500,\n  \"role\": \"Senior Software Engineer\"\n}" },
+            "url": { "raw": "{{baseUrl}}/employees/{{employeeId}}", "host": ["{{baseUrl}}"], "path": ["employees", "{{employeeId}}"] }
+          }
+        },
+        {
+          "name": "Delete Employee (Soft)",
+          "request": {
+            "method": "DELETE",
+            "url": { "raw": "{{baseUrl}}/employees/{{employeeId}}", "host": ["{{baseUrl}}"], "path": ["employees", "{{employeeId}}"] }
+          }
+        },
+        {
+          "name": "Get Departments",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/employees/departments", "host": ["{{baseUrl}}"], "path": ["employees", "departments"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "📅 Attendance",
+      "item": [
+        {
+          "name": "Mark Attendance",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"employeeId\": \"{{employeeId}}\",\n  \"date\": \"2024-06-15\",\n  \"status\": \"PRESENT\",\n  \"checkIn\": \"2024-06-15T09:00:00Z\",\n  \"checkOut\": \"2024-06-15T18:00:00Z\"\n}" },
+            "url": { "raw": "{{baseUrl}}/attendance/mark", "host": ["{{baseUrl}}"], "path": ["attendance", "mark"] }
+          }
+        },
+        {
+          "name": "Bulk Mark Attendance",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"date\": \"2024-06-16\",\n  \"records\": [\n    { \"employeeId\": \"{{employeeId}}\", \"status\": \"PRESENT\" }\n  ]\n}" },
+            "url": { "raw": "{{baseUrl}}/attendance/bulk-mark", "host": ["{{baseUrl}}"], "path": ["attendance", "bulk-mark"] }
+          }
+        },
+        {
+          "name": "Daily View",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/attendance/daily/2024-06-15", "host": ["{{baseUrl}}"], "path": ["attendance", "daily", "2024-06-15"] }
+          }
+        },
+        {
+          "name": "Employee History",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/attendance/employee/{{employeeId}}?month=6&year=2024", "host": ["{{baseUrl}}"], "path": ["attendance", "employee", "{{employeeId}}"], "query": [
+              { "key": "month", "value": "6" }, { "key": "year", "value": "2024" }
+            ]}
+          }
+        },
+        {
+          "name": "Monthly Summary",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/attendance/summary?month=6&year=2024", "host": ["{{baseUrl}}"], "path": ["attendance", "summary"], "query": [
+              { "key": "month", "value": "6" }, { "key": "year", "value": "2024" }
+            ]}
+          }
+        },
+        {
+          "name": "Export Attendance CSV",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/attendance/employee/{{employeeId}}/export?month=6&year=2024", "host": ["{{baseUrl}}"], "path": ["attendance", "employee", "{{employeeId}}", "export"], "query": [
+              { "key": "month", "value": "6" }, { "key": "year", "value": "2024" }
+            ]}
+          }
+        }
+      ]
+    },
+    {
+      "name": "💰 Salary",
+      "item": [
+        {
+          "name": "Calculate Payroll (All)",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/salary/payroll?month=6&year=2024", "host": ["{{baseUrl}}"], "path": ["salary", "payroll"], "query": [
+              { "key": "month", "value": "6" }, { "key": "year", "value": "2024" }
+            ]}
+          }
+        },
+        {
+          "name": "Calculate Single Employee",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/salary/employee/{{employeeId}}?month=6&year=2024", "host": ["{{baseUrl}}"], "path": ["salary", "employee", "{{employeeId}}"], "query": [
+              { "key": "month", "value": "6" }, { "key": "year", "value": "2024" }
+            ]}
+          }
+        },
+        {
+          "name": "Export Payroll CSV",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/salary/payroll/export/csv?month=6&year=2024", "host": ["{{baseUrl}}"], "path": ["salary", "payroll", "export", "csv"], "query": [
+              { "key": "month", "value": "6" }, { "key": "year", "value": "2024" }
+            ]}
+          }
+        },
+        {
+          "name": "Export Payroll PDF",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/salary/payroll/export/pdf?month=6&year=2024", "host": ["{{baseUrl}}"], "path": ["salary", "payroll", "export", "pdf"], "query": [
+              { "key": "month", "value": "6" }, { "key": "year", "value": "2024" }
+            ]}
+          }
+        }
+      ]
+    },
+    {
+      "name": "🏖️ Leaves",
+      "item": [
+        {
+          "name": "Submit Leave Request",
+          "event": [{ "listen": "test", "script": { "exec": [
+            "if (pm.response.code === 201) {",
+            "  pm.collectionVariables.set('leaveId', pm.response.json().data.id);",
+            "}"
+          ], "type": "text/javascript" } }],
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"employeeId\": \"{{employeeId}}\",\n  \"startDate\": \"2024-06-20\",\n  \"endDate\": \"2024-06-22\",\n  \"type\": \"SICK\",\n  \"reason\": \"Fever and rest\"\n}" },
+            "url": { "raw": "{{baseUrl}}/leaves", "host": ["{{baseUrl}}"], "path": ["leaves"] }
+          }
+        },
+        {
+          "name": "List Leaves",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/leaves?status=PENDING", "host": ["{{baseUrl}}"], "path": ["leaves"], "query": [
+              { "key": "status", "value": "PENDING" }
+            ]}
+          }
+        },
+        {
+          "name": "Approve Leave",
+          "request": {
+            "method": "PATCH",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{ \"status\": \"APPROVED\" }" },
+            "url": { "raw": "{{baseUrl}}/leaves/{{leaveId}}/review", "host": ["{{baseUrl}}"], "path": ["leaves", "{{leaveId}}", "review"] }
+          }
+        },
+        {
+          "name": "Reject Leave",
+          "request": {
+            "method": "PATCH",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{ \"status\": \"REJECTED\" }" },
+            "url": { "raw": "{{baseUrl}}/leaves/{{leaveId}}/review", "host": ["{{baseUrl}}"], "path": ["leaves", "{{leaveId}}", "review"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "📊 Dashboard",
+      "item": [
+        {
+          "name": "Overview",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/dashboard", "host": ["{{baseUrl}}"], "path": ["dashboard"] }
+          }
+        },
+        {
+          "name": "Monthly Trend",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/dashboard/trend?month=6&year=2024", "host": ["{{baseUrl}}"], "path": ["dashboard", "trend"], "query": [
+              { "key": "month", "value": "6" }, { "key": "year", "value": "2024" }
+            ]}
+          }
+        }
+      ]
+    },
+    {
+      "name": "⚙️ Settings",
+      "item": [
+        {
+          "name": "Get Settings",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/settings", "host": ["{{baseUrl}}"], "path": ["settings"] }
+          }
+        },
+        {
+          "name": "Update Settings",
+          "request": {
+            "method": "PUT",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"workingDays\": 26,\n  \"currency\": \"USD\",\n  \"timezone\": \"America/New_York\"\n}" },
+            "url": { "raw": "{{baseUrl}}/settings", "host": ["{{baseUrl}}"], "path": ["settings"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "🔍 Health",
+      "item": [
+        {
+          "name": "Health Check",
+          "request": {
+            "method": "GET", "auth": { "type": "noauth" },
+            "url": { "raw": "http://localhost:5000/api/health", "host": ["http://localhost:5000"], "path": ["api", "health"] }
+          }
+        }
+      ]
+    }
+  ]
+}
