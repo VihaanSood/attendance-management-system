@@ -28,8 +28,21 @@ const app = express();
 
 // ── Security Middleware ──────────────────────────────────────────
 app.use(helmet());
+
+const allowedOrigins = (process.env.ALLOWED_ORIGINS || 'http://localhost:3000')
+  .split(',')
+  .map(o => o.trim())
+  .filter(Boolean);
+
 app.use(cors({
-  origin: (process.env.ALLOWED_ORIGINS || 'http://localhost:3000').split(','),
+  origin: (origin, callback) => {
+    // Allow requests with no origin (mobile apps, curl, Postman)
+    if (!origin) return callback(null, true);
+    if (allowedOrigins.includes(origin) || allowedOrigins.includes('*')) {
+      return callback(null, true);
+    }
+    callback(new Error(`CORS: origin ${origin} not allowed`));
+  },
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization'],
@@ -47,7 +60,7 @@ const limiter = rateLimit({
 // Stricter limit for auth endpoints
 const authLimiter = rateLimit({
   windowMs: 15 * 60 * 1000,
-  max: 10000,
+  max: 10,
   message: { success: false, message: 'Too many authentication attempts.' },
 });
 
