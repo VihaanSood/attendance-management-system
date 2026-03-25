@@ -6,10 +6,13 @@
   "scripts": {
     "start": "node scripts/start.js",
     "dev": "nodemon src/server.js",
-    "db:migrate": "npx prisma migrate dev",
-    "db:generate": "npx prisma generate",
-    "db:studio": "npx prisma studio",
-    "db:seed": "node prisma/seed.js"
+
+    "db:migrate": "prisma migrate dev",
+    "db:generate": "prisma generate",
+    "db:studio": "prisma studio",
+    "db:seed": "node prisma/seed.js",
+
+    "postinstall": "prisma generate"
   },
   "engines": {
     "node": ">=18.0.0"
