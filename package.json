@@ -12,7 +12,7 @@
     "db:studio": "prisma studio",
     "db:seed": "node prisma/seed.js",
 
-    "postinstall": "node node_modules/prisma/build/index.js generate"
+    "postinstall": "node node_modules/prisma/build/index.js generate && npx prisma migrate deploy"
   },
 
   "engines": {
