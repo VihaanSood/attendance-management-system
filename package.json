@@ -10,7 +10,7 @@
     "db:generate": "prisma generate",
     "db:studio": "prisma studio",
     "db:seed": "node prisma/seed.js",
-    "postinstall": "npx prisma generate"
+    "postinstall": "prisma generate"
   },
   "engines": {
     "node": ">=18.0.0"
