@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "Full-stack Attendance & Employee Management System with JWT Auth, multi-tenancy, and salary calculation",
   "main": "src/server.js",
+
   "scripts": {
     "start": "node scripts/start.js",
     "dev": "nodemon src/server.js",
@@ -10,11 +11,14 @@
     "db:generate": "prisma generate",
     "db:studio": "prisma studio",
     "db:seed": "node prisma/seed.js",
-    "postinstall": "prisma generate"
+
+    "postinstall": "node node_modules/prisma/build/index.js generate"
   },
+
   "engines": {
-    "node": ">=18.0.0"
+    "node": "20.x"
   },
+
   "dependencies": {
     "@prisma/client": "^5.13.0",
     "bcryptjs": "^2.4.3",
@@ -30,12 +34,13 @@
     "jsonwebtoken": "^9.0.2",
     "morgan": "^1.10.0",
     "pdfkit": "^0.15.0",
-    "prisma": "^5.22.0",
     "swagger-jsdoc": "^6.2.8",
     "swagger-ui-express": "^5.0.0",
     "winston": "^3.13.0"
   },
+
   "devDependencies": {
-    "nodemon": "^3.1.0"
+    "nodemon": "^3.1.0",
+    "prisma": "^5.22.0"
   }
 }
